@@ -146,29 +146,36 @@ public class Main {
     }
 
     private static void addStudent(University university) throws IOException {
-        System.out.println("Please enter student name: ");
-        Scanner scan = new Scanner(System.in);
-        String name = scan.nextLine();
-        scan = new Scanner(System.in);
+        String name;
         int age;
-        Student newStudent = null;
+        Scanner scan = new Scanner(System.in);
+        do{
+            System.out.println("Please enter student name: ");
+            name = scan.nextLine();
+            scan = new Scanner(System.in);
+            if(university.studentExists(name)){
+                System.out.println("The student already exists");
+            }
+
+        }while(university.studentExists(name));
+
         do{
             System.out.println("Please enter student's age: ");
             if(scan.hasNextInt()){
                 age = scan.nextInt();
-                newStudent = university.addToStudentList(name,age);
-                if(newStudent == null){
-                    System.out.println("The student already exists");
-                }
                 scan = new Scanner(System.in);
                 if(age < 1){
+                    System.out.println("Please enter a valid age");
                     age = -1;
                 }
             }
             else{
+                scan = new Scanner(System.in);
                 age = -1;
+                System.out.println("Please enter a valid age");
             }
-        }while(age == -1 || newStudent == null);
+        }while(age == -1);
+        Student newStudent = new Student(name,age);
         int course = printCourseList(university.getCourseList(),true);
         Course destination = university.getCourseById(course);
         destination.addToCourse(newStudent.getStudentId(),destination.getCourseId());

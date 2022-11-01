@@ -80,6 +80,15 @@ public class University {
         return null;
     }
 
+    public boolean studentExists(String name){
+        for(Student current : studentList){
+            if(current.getStudentName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean studentInList(String name){
         for(Student current : studentList){
             String studentName = current.getStudentName();

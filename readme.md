@@ -25,3 +25,8 @@ The program should:
 
 ### UML Diagram
 ![UML diagram](img/UniversityTracker.png)
+
+### Notes
+The persistence layer contains csv files from where the initial data is read and to where the new data is written during 
+program execution. For practical purposes the IOBridge class contains a full path named accordingly to the local developement
+environment and will need to be replaced in order to work at another machine.
