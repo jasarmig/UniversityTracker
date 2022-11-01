@@ -151,10 +151,15 @@ public class Main {
         String name = scan.nextLine();
         scan = new Scanner(System.in);
         int age;
+        Student newStudent = null;
         do{
             System.out.println("Please enter student's age: ");
             if(scan.hasNextInt()){
                 age = scan.nextInt();
+                newStudent = university.addToStudentList(name,age);
+                if(newStudent == null){
+                    System.out.println("The student already exists");
+                }
                 scan = new Scanner(System.in);
                 if(age < 1){
                     age = -1;
@@ -163,8 +168,7 @@ public class Main {
             else{
                 age = -1;
             }
-        }while(age == -1);
-        Student newStudent = university.addToStudentList(name, age);
+        }while(age == -1 || newStudent == null);
         int course = printCourseList(university.getCourseList(),true);
         Course destination = university.getCourseById(course);
         destination.addToCourse(newStudent.getStudentId(),destination.getCourseId());
