@@ -89,10 +89,9 @@ public class University {
         return false;
     }
 
-    public boolean studentInList(String name){
-        for(Student current : studentList){
-            String studentName = current.getStudentName();
-            if(studentName.equals(name)){
+    public boolean courseExists(String name){
+        for(Course current : courseList){
+            if(current.getCourseName().equals(name)){
                 return true;
             }
         }
@@ -109,17 +108,6 @@ public class University {
 
     public ArrayList<Student> getStudentList() {
         return studentList;
-    }
-
-    public Student addToStudentList(String name, int age) throws IOException {
-        if(!studentInList(name)){
-            Student newStudent = new Student(name,age);
-            studentList.add(newStudent);
-            initializeUniversity();
-            return newStudent;
-
-        }
-        return null;
     }
 
     public void addToCourseList(String name, String room, int teacherId, ArrayList<Integer> students) throws IOException {
