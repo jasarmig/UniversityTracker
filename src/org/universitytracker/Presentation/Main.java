@@ -55,10 +55,18 @@ public class Main {
 
     private static void addCourse(University university) throws IOException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter course name: ");
-        String name = scan.nextLine();
+        String name;
+        do{
+            System.out.println("Enter course name: ");
+            name = scan.nextLine();
+            scan = new Scanner(System.in);
+            if(university.courseExists(name)){
+                System.out.println("The course already exists");
+            }
+        }while(university.courseExists(name));
         System.out.println("Enter classroom: ");
         String room = scan.nextLine();
+        scan = new Scanner(System.in);
         System.out.println("Assign a teacher to this course:");
         int teacherId = printTeacherMenu(university.getTeacherList());
         ArrayList<Integer> students = assignStudents(university.getStudentList());
@@ -69,19 +77,23 @@ public class Main {
     private static ArrayList<Integer> assignStudents(ArrayList<Student> studentList) {
         ArrayList<Student> cloned = (ArrayList<Student>) studentList.clone();
         int option;
-        int student;
+        int student=-1;
         Student toRemove = null;
         ArrayList<Integer> validationOptions = new ArrayList<>();
         ArrayList<Integer> enrolledStudents = new ArrayList<>();
         validationOptions.add(1);
         validationOptions.add(2);
         do{
-            student = printStudentMenu(cloned);
+            System.out.println("THESE STUDENTS CAN TAKE THIS COURSE\n");
+            do{
+                student = printStudentMenu(cloned);
+            }while(student == -1);
             Scanner scan = new Scanner(System.in);
             enrolledStudents.add(student);
             System.out.println("\n[1] Add another student");
             System.out.println("[2] Exit");
             option = optionValidation(scan,validationOptions);
+
             for(Student current : cloned){
                 if(current.getStudentId()==student){
                     toRemove = current;
@@ -109,14 +121,14 @@ public class Main {
     private static int printStudentMenu(ArrayList<Student> studentList) {
         int option;
         ArrayList<Integer> studentOptions = new ArrayList<>();
-        String format = "%1$-3s %2$s\n";
-        System.out.printf(format,"ID","STUDENT NAME");
-        format = "[%1$s] %2$s\n";
-        for(Student current : studentList){
-            System.out.printf(format,current.getStudentId(),current.getStudentName());
-            studentOptions.add(current.getStudentId());
-        }
         do{
+            String format = "%1$-3s %2$s\n";
+            System.out.printf(format,"ID","STUDENT NAME");
+            format = "[%1$s] %2$s\n";
+            for(Student current : studentList){
+                System.out.printf(format,current.getStudentId(),current.getStudentName());
+                studentOptions.add(current.getStudentId());
+            }
             System.out.println("Select a student to continue");
             Scanner scan = new Scanner(System.in);
             option = optionValidation(scan,studentOptions);
@@ -146,25 +158,35 @@ public class Main {
     }
 
     private static void addStudent(University university) throws IOException {
-        System.out.println("Please enter student name: ");
-        Scanner scan = new Scanner(System.in);
-        String name = scan.nextLine();
-        scan = new Scanner(System.in);
+        String name;
         int age;
+        Scanner scan = new Scanner(System.in);
+        do{
+            System.out.println("Please enter student name: ");
+            name = scan.nextLine();
+            scan = new Scanner(System.in);
+            if(university.studentExists(name)){
+                System.out.println("The student already exists");
+            }
+        }while(university.studentExists(name));
+
         do{
             System.out.println("Please enter student's age: ");
             if(scan.hasNextInt()){
                 age = scan.nextInt();
                 scan = new Scanner(System.in);
                 if(age < 1){
+                    System.out.println("Please enter a valid age");
                     age = -1;
                 }
             }
             else{
+                scan = new Scanner(System.in);
                 age = -1;
+                System.out.println("Please enter a valid age");
             }
         }while(age == -1);
-        Student newStudent = university.addToStudentList(name, age);
+        Student newStudent = new Student(name,age);
         int course = printCourseList(university.getCourseList(),true);
         Course destination = university.getCourseById(course);
         destination.addToCourse(newStudent.getStudentId(),destination.getCourseId());
